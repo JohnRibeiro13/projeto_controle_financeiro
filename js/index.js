@@ -1,5 +1,7 @@
 const usuarios = [];
 
+let cont =0;
+
 function salvarUsuario(){
   const nome = document.getElementById("nome").value;
   const endereco = document.getElementById("endereco").value;
@@ -23,75 +25,92 @@ function salvarUsuario(){
  
 
 }
+
 function cadUsuario(){
+  
+  let usuariosGravados =    JSON.parse( window.localStorage.getItem("usuarios"))  ;
+
   const nome = document.getElementById("nome").value;
+  const senha = document.getElementById("senha").value;
   const endereco = document.getElementById("endereco").value;
   const telefone = document.getElementById("telefone").value;
   const email = document.getElementById("email").value;
-  const senha = document.getElementById("senha").value;
   const cidade = document.getElementById("cidade").value;
- 
+  const status = "ausente";
 
-  const usuario = {id: Date.now(),nome, endereco, telefone, email,senha, cidade};
-  //usuarios.push(usuario);//
-  // criar o objeto na localstorage
-  // esta vazio na memoria
-  //window.localStorage.setItem('usuarios',JSON.stringify([])); // criar
-  // primeiro acesso verificar se existe a chave na memoria
-  let usuarioGravado = JSON.parse(window.localStorage.getItem("usuarios"));
-  if(usuarioGravado == null){ // primeiro acesso chave ainda não foi criada
-    window.localStorage.setItem('usuarios',JSON.stringify([])); // criar
-    usuarioGravado = JSON.parse(window.localStorage.getItem("usuarios"));// atualizar a minha variavel
-    // validar se o email ja´ existe
-    let usuarioIndex = usuarioGravado.findIndex(usuario => usuario.email === email);
-    if(usuarioIndex !== -1){ // já existe um email gravado na memoria
-      Swal.fire({
-    
-        icon: 'warning',
-        title: 'Email já está cadastrado no sistema!',
-        showConfirmButton: false,
-        timer: 1500
-      });
-    }else{
-      usuarioGravado.push(usuario); // adiciona um novo usuario
-      window.localStorage.setItem('usuarios', JSON.stringify(usuarioGravado)); // gravar na memoria o objeto atualizado
-    }
-    
-  }else{ // chave usuario já existe na memória
-    let usuarioIndex = usuarioGravado.findIndex(usuario => usuario.email === email);
-    if(usuarioIndex !== -1){ // já existe um email gravado na memoria
-      Swal.fire({
-    
-        icon: 'warning',
-        title: 'Email já está cadastrado no sistema!',
-        showConfirmButton: false,
-        timer: 1500
-      });
-    }
-    else{
-      usuarioGravado.push(usuario); // adiciono um novo usuario
-      window.localStorage.setItem('usuarios',JSON.stringify(usuarioGravado)); // gravar na memoria
-    }  
-    
-  }
-  /*usuarioGravado.push(usuario);
-  window.localStorage.setItem('usuarios',JSON.stringify(usuarioGravado));// gravo na memoria o array novo
-  */
+  let id = usuarios.length + cont;
+let entradas = 0;
+let saidas = 0;
+
+
+  const usuario = {id,nome, senha,endereco, telefone, email, cidade,status,entradas,saidas};
   
+
+
+  let usuarioIndex = usuarios.findIndex( usuario => usuario.email == email);
   
+
   
-  /*Swal.fire({
-    
-    icon: 'success',
-    title: 'Usuário cadastrado com sucesso!',
+
+  if(usuariosGravados == null){
+
+  if(usuarioIndex != -1){Swal.fire({
+  
+    icon: 'warning',
+    title: 'Este Email já foi cadastrado!!',
     showConfirmButton: false,
     timer: 1500
-  });
-  limpar();
-  window.location.href = "index.html";*/
- 
- 
+  })}else{
 
+    
+
+    usuarios.push(usuario);
+
+   
+
+    localStorage.setItem('usuarios',JSON.stringify(usuarios));
+
+    Swal.fire({
+  
+      icon: 'success',
+      title: 'Cadastrado com sucesso',
+      showConfirmButton: false,
+      timer: 1500
+    })
+limpar();
+
+  }
+
+}else{
+
+  if(usuarioIndex != -1){Swal.fire({
+  
+    icon: 'warning',
+    title: 'Este Email já foi cadastrado!!',
+    showConfirmButton: false,
+    timer: 1500
+  })}else{
+
+    usuario.id=  usuariosGravados.length + cont;
+
+    usuariosGravados.push(usuario);
+
+    localStorage.setItem('usuarios',JSON.stringify(usuariosGravados));
+
+    Swal.fire({
+  
+      icon: 'success',
+      title: 'Cadastrado com sucesso',
+      showConfirmButton: false,
+      timer: 1500
+    })
+limpar();
+
+  }
+
+
+
+}
 }
 
 
@@ -123,6 +142,70 @@ function apagarUsuario(id){
       )
     }
   });
+}
+
+let idlocal = "";
+
+function validarlogin(){
+
+  let usuariosGravados =    JSON.parse( window.localStorage.getItem("usuarios"))  ;
+
+
+
+ const email = document.getElementById("Lemail").value;
+ const senha = document.getElementById("Lsenha").value;
+
+ let usuarioIndex2 = usuariosGravados.findIndex( usuario => usuario.email == email && usuario.senha == senha);
+ 
+
+
+if(usuarioIndex2 == -1 ){
+
+ Swal.fire({
+     
+   icon: 'warning',
+   title: 'Email ou senha errados!!',
+   showConfirmButton: false,
+   timer: 1500
+ })
+}else if( usuariosGravados[usuarioIndex2].status == "ausente"){ 
+ Swal.fire({
+     
+   icon: 'success',
+   title: 'Bem vindo',
+   showConfirmButton: false,
+   timer: 1500
+
+   
+ })
+ setInterval(function(){
+  window.location.href= 'dashboard.html'; 
+}),3000;
+  
+idlocal = usuariosGravados[usuarioIndex2].id;
+localStorage.setItem('idlocal',JSON.stringify(idlocal));
+
+
+
+usuariosGravados[usuarioIndex2].status = "ativo";
+
+localStorage.setItem('usuarios',JSON.stringify(usuariosGravados));
+
+
+}
+ 
+  
+}
+
+
+
+
+
+function carregamento2(){
+
+  let usuariosGravados =    JSON.parse( window.localStorage.getItem("usuarios"))  ;
+
+  
 }
 
 function logar(){
@@ -187,7 +270,6 @@ for(let i = 0; i < inputs.length; i++){
 }
   
 }
-
 
 
 function editarUsuario(id){

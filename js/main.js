@@ -1,28 +1,38 @@
-function listaCartBagde(){
-  let cart = JSON.parse(window.localStorage.getItem("cartComprados"));
-  if(cart){
-   document.getElementById("cart").innerHTML = cart.length;
-  }else{
-   document.getElementById("cart").innerHTML = 0;
-  }
-}
-function totalProdutos(){
-  let produtos = JSON.parse(window.localStorage.getItem("produtos"));
-  if(produtos){
-   document.getElementById("totalprodutos").innerHTML = produtos.length;
-  }else{
-   document.getElementById("totalprodutos").innerHTML = 0;
-  }
-}
-function totalUsuarios(){
-  let usuarios = JSON.parse(window.localStorage.getItem("usuarios"));
-  if(usuarios){
-   document.getElementById("totalusuarios").innerHTML = usuarios.length;
-  }else{
-   document.getElementById("totalusuarios").innerHTML = 0;
-  }
+function carregamento1(){
+  
+ 
+  let usuariosGravados =    JSON.parse( window.localStorage.getItem("usuarios"))  ;
+  let idlocal = JSON.parse( window.localStorage.getItem("idlocal"))  ;
+
+
+  document.getElementById("entradas").innerHTML = usuariosGravados[idlocal].entradas;
+
+ 
+  document.getElementById("saidas").innerHTML = usuariosGravados[idlocal].saidas;
+
+
+let total = usuariosGravados[idlocal].entradas - usuariosGravados[idlocal].saidas;
+
+  document.getElementById("saldo").innerHTML = total;
+
+
+  
 }
 
-listaCartBagde();
-totalProdutos();
-totalUsuarios();
+function contarsaida(){
+  let usuariosGravados =    JSON.parse( window.localStorage.getItem("usuarios"))  ;
+let idlocal = JSON.parse( window.localStorage.getItem("idlocal"))  ;
+
+
+
+usuariosGravados[idlocal].status = "ausente";
+
+  localStorage.setItem('usuarios',JSON.stringify(usuariosGravados));
+
+  idlocal = null;
+  localStorage.setItem('idlocal',JSON.stringify(null));
+  window.location.href= 'index.html'; 
+}
+
+
+carregamento1();

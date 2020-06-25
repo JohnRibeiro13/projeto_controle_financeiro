@@ -31,50 +31,7 @@ function salvarUsuario(){
   
 
  }
-function cadUsuario(){
-  const nome = document.getElementById("nome").value;
-  const endereco = document.getElementById("endereco").value;
-  const telefone = document.getElementById("telefone").value;
-  const email = document.getElementById("email").value;
-  const cidade = document.getElementById("cidade").value;
-  const senha = document.getElementById("senha").value;
-  let id = usuarios.length;
-  const usuario = {id: id++,
-     nome, endereco, telefone, email, cidade,senha};
-     //usuarios.push(usuario); 
-  // gravar no localstorage
-  //window.localStorage.setItem("usuarios",JSON.stringify([]));
-  let usuariosGravados = JSON.parse(window.localStorage.getItem("usuarios"));
-  
-  if(usuariosGravados == null){
-   
-    window.localStorage.setItem("usuarios",JSON.stringify([])); // criar
-    usuariosGravados = JSON.parse(window.localStorage.getItem("usuarios")); // recuperar novamente
-    usuariosGravados.push(usuario); // inserir o novo registro
-    window.localStorage.setItem("usuarios",JSON.stringify(usuariosGravados)); // gravar na memoria novamente
-  }else{
-   
-    usuariosGravados.push(usuario);
-    window.localStorage.setItem("usuarios",JSON.stringify(usuariosGravados));   
 
-  }
-   
-  
- 
-  
-  Swal.fire({
-    
-    icon: 'success',
-    title: 'Usuário cadastrado com sucesso!!!',
-    showConfirmButton: false,
-    timer: 2500
-  });
-  
-  limparInputs();
-  window.location.href="index.html";
-  
-
- }
 
  function apagarUsuario(id){
   Swal.fire({
@@ -108,29 +65,49 @@ function cadUsuario(){
       
  }
 
+
  function editarUsuario(id){
-   for(let i =0; i< usuarios.length; i++){
-     if(usuarios[i].id == id){
-     document.getElementById("id").value =  usuarios[i].id;
-     document.getElementById("nome").value =  usuarios[i].nome;
-      document.getElementById("endereco").value = usuarios[i].endereco;
-       document.getElementById("telefone").value =  usuarios[i].telefone;
-      document.getElementById("email").value =  usuarios[i].email;
-     document.getElementById("cidade").value =  usuarios[i].cidade;
-     
-     }
-   }
+
+  let usuariosGravados = JSON.parse(window.localStorage.getItem("usuarios"));
+
    
+     document.getElementById("Pid").value =  usuariosGravados[id].id;
+     document.getElementById("Pnome").value =  usuariosGravados[id].nome;
+      document.getElementById("Pendereco").value = usuariosGravados[id].endereco;
+       document.getElementById("Ptelefone").value = usuariosGravados[id].telefone;
+      document.getElementById("Pemail").value =  usuariosGravados[id].email;
+      document.getElementById("Psenha").value =  usuariosGravados[id].senha;
+     document.getElementById("Pcidade").value =  usuariosGravados[id].cidade;
+     
+     
+     let botao = document.getElementById("botao1");
+     let botao1 = "<button class='btn btn-outline-info' type='button' onclick='alterarUsuario()'>"+"Alterar"+"</button>";
+  
+     botao.innerHTML = botao1;
+
  }
  function alterarUsuario(){
-  const id = document.getElementById("id").value;
-  const nome = document.getElementById("nome").value;
-  const endereco = document.getElementById("endereco").value;
-  const telefone = document.getElementById("telefone").value;
-  const email = document.getElementById("email").value;
-  const cidade = document.getElementById("cidade").value;
-  let usuarioIndex = usuarios.findIndex(usuario => usuario.id = id);  
-  usuarios[usuarioIndex] = {id,nome, endereco, telefone, email, cidade};
+let idlocal = JSON.parse(window.localStorage.getItem("idlocal"));
+let usuariosGravados = JSON.parse(window.localStorage.getItem("usuarios"));
+
+
+  const id = document.getElementById("Pid").value;
+  const nome = document.getElementById("Pnome").value;
+  const endereco = document.getElementById("Pendereco").value;
+  const telefone = document.getElementById("Ptelefone").value;
+  const email = document.getElementById("Pemail").value;
+  const senha = document.getElementById("Psenha").value;
+  const cidade = document.getElementById("Pcidade").value;
+ 
+  const status = usuariosGravados[idlocal].status;
+  const entradas = usuariosGravados[idlocal].entradas;
+  const saidas = usuariosGravados[idlocal].saidas;
+  
+
+  usuariosGravados[idlocal] = {id,nome, senha,endereco, telefone, email, cidade,status,entradas,saidas};
+
+
+  localStorage.setItem('usuarios',JSON.stringify(usuariosGravados));
 
   Swal.fire({
     
@@ -139,32 +116,40 @@ function cadUsuario(){
     showConfirmButton: false,
     timer: 1500
   });
+
+
+
+
   listarUsuarios();
   limparInputs();
  }
 
  function listarUsuarios(){
-  let linha = "";
+
   let usuariosGravado = JSON.parse(window.localStorage.getItem("usuarios"));
+  let idlocal = JSON.parse(window.localStorage.getItem("idlocal"));
+  
+  let linha = "";
+ 
   if(usuariosGravado){
-  usuariosGravado.forEach(usuario => {
+ 
     row = document.getElementById("tbody");
     if(row){
      linha += "<tr>"+
-              "<td id='tdid'>"+usuario.id +"</td>"+
-              "<td id='tdnome'>"+usuario.nome +"</td>"+
-              "<td id='tdendereco'>"+usuario.endereco+"</td>"+
-              "<td id='tdtelefone'>"+usuario.telefone+"</td>"+
-              "<td id='tdemail'>"+usuario.email+"</td>"+
-              "<td id='tdcidade'>"+usuario.cidade+"</td>"+
-              "<td id='tdacoes'><button class='btn btn-outline-success' onclick='editarUsuario("+usuario.id+")'><i class='fa fa-edit'></i></button>"+
-              "<button class='btn btn-outline-danger'onclick='apagarUsuario("+usuario.id+")'><i class='fa fa-trash'></i></button></td>"
-            +"</tr>";
+              "<td id='tdid'>"+usuariosGravado[idlocal].id +"</td>"+
+              "<td id='tdnome'>"+usuariosGravado[idlocal].nome  +"</td>"+
+              "<td id='tdendereco'>"+usuariosGravado[idlocal].endereco +"</td>"+
+              "<td id='tdtelefone'>"+usuariosGravado[idlocal].telefone +"</td>"+
+              "<td id='tdemail'>"+usuariosGravado[idlocal].email +"</td>"+
+              
+              "<td id='tdcidade'>"+usuariosGravado[idlocal].cidade +"</td>"+
+              "<td id='tdacoes'><button class='btn btn-outline-success' onclick='editarUsuario("+usuariosGravado[idlocal].id+")'><i class='fa fa-edit'></i></button>"+
+              "</tr>";
     row.innerHTML = linha;        
     }
   
   
-  });
+  ;
 }
  }
 
